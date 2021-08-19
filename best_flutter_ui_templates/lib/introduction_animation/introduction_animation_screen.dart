@@ -1,3 +1,4 @@
+import 'package:best_flutter_ui_templates/fitness_app/fitness_app_home_screen.dart';
 import 'package:best_flutter_ui_templates/introduction_animation/components/care_view.dart';
 import 'package:best_flutter_ui_templates/introduction_animation/components/center_next_button.dart';
 import 'package:best_flutter_ui_templates/introduction_animation/components/mood_diary_vew.dart';
@@ -112,6 +113,10 @@ class _IntroductionAnimationScreenState
   }
 
   void _signUpClick() {
-    Navigator.pop(context);
+    /*this redirect (pushReplacement) trigger closes the app when back pressed*/
+    Navigator.pushReplacement(context, MaterialPageRoute<dynamic>(
+      builder: (BuildContext context) =>
+          FitnessAppHomeScreen(),
+    ));
   }
 }
