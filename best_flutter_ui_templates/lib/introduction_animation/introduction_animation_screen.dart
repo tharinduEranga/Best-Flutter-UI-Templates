@@ -73,8 +73,9 @@ class _IntroductionAnimationScreenState
   }
 
   void _onSkipClick() {
-    _animationController?.animateTo(0.8,
-        duration: Duration(milliseconds: 1200));
+    // _animationController?.animateTo(0.8,
+    //     duration: Duration(milliseconds: 1200));
+    _signUpClick();
   }
 
   void _onBackClick() {
