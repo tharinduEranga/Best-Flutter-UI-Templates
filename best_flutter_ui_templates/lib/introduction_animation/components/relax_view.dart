@@ -1,32 +1,8 @@
+import 'dart:math';
+
+import 'package:best_flutter_ui_templates/service/data.dart';
 import 'package:flutter/material.dart';
-
-
-class Continent {
-
-  const Continent({
-    required this.name,
-    required this.size,
-  });
-
-  final String name;
-  final int size;
-
-  @override
-  String toString() {
-    return '$name ($size)';
-  }
-}
-
-const List<Continent> continentOptions = <Continent>[
-  Continent(name: 'Africa', size: 30370000),
-  Continent(name: 'Antarctica', size: 14000000),
-  Continent(name: 'Asia', size: 44579000),
-  Continent(name: 'Australia', size: 8600000),
-  Continent(name: 'Europe', size: 10180000),
-  Continent(name: 'North America', size: 24709000),
-  Continent(name: 'South America', size: 17840000),
-];
-
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class RelaxView extends StatefulWidget {
   final AnimationController animationController;
@@ -52,6 +28,7 @@ class _RelaxViewState extends State<RelaxView> {
         ),
       ),
     );
+
     final _secondHalfAnimation =
         Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0)).animate(
       CurvedAnimation(
@@ -97,6 +74,7 @@ class _RelaxViewState extends State<RelaxView> {
         ),
       ),
     );
+
     return SlideTransition(
       position: _firstHalfAnimation,
       child: SlideTransition(
@@ -107,7 +85,9 @@ class _RelaxViewState extends State<RelaxView> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               /*top padding*/
-              Padding(padding: EdgeInsets.all(50.0),),
+              Padding(
+                padding: EdgeInsets.all(50.0),
+              ),
               SlideTransition(
                 position: _relaxAnimation,
                 child: Text(
@@ -117,69 +97,113 @@ class _RelaxViewState extends State<RelaxView> {
               ),
               SlideTransition(
                 position: _imageAnimation,
-                child: Autocomplete<Continent>(
-                  optionsBuilder: (TextEditingValue textEditingValue) {
-                    return continentOptions
-                        .where((Continent continent) => continent.name.toLowerCase()
-                        .startsWith(textEditingValue.text.toLowerCase())
-                    )
-                        .toList();
-                  },
-                  displayStringForOption: (Continent option) => option.name,
-                  fieldViewBuilder: (
-                      BuildContext context,
-                      TextEditingController fieldTextEditingController,
-                      FocusNode fieldFocusNode,
-                      VoidCallback onFieldSubmitted
-                      ) {
-                    return TextField(
-                      controller: fieldTextEditingController,
-                      focusNode: fieldFocusNode,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    );
-                  },
-                  onSelected: (Continent selection) {
-                    print('Selected: ${selection.name}');
-                  },
-                  optionsViewBuilder: (
-                      BuildContext context,
-                      AutocompleteOnSelected<Continent> onSelected,
-                      Iterable<Continent> options
-                      ) {
-                    return Align(
-                      alignment: Alignment.topCenter,
-                      child: Material(
-                        child: Container(
-                          width: 300,
-                          height: 200,
-                          color: Colors.white,
-                          child: ListView.builder(
-                            padding: EdgeInsets.all(10.0),
-                            itemCount: options.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final Continent option = options.elementAt(index);
-
-                              return GestureDetector(
-                                onTap: () {
-                                  onSelected(option);
-                                },
-                                child: ListTile(
-                                  title: Text(option.name,
-                                      style: const TextStyle(color: Colors.black54)),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TypeAheadField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        autofocus: true,
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .copyWith(fontStyle: FontStyle.italic),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'What`s going on your body?'),
                       ),
-                    );
-                  },
+                      suggestionsCallback: (pattern) async {
+                        return await BackendService.getSuggestions(pattern);
+                      },
+                      itemBuilder: (context, Map<String, String> suggestion) {
+                        return ListTile(
+                          title: Text(suggestion['name']!),
+                          subtitle: Text('${suggestion['score']}'),
+                        );
+                      },
+                      onSuggestionSelected: (Map<String, String> suggestion) {
+                        // your implementation here
+                        addSymptomToSelections(suggestion);
+                      },
+                    ),
+                  ],
                 ),
               ),
+              SizedBox(height: 150), // give it height
+              ConstrainedBox(
+                  constraints: new BoxConstraints(
+                    minHeight: 35.0,
+                    maxHeight: 165.0,
+                  ),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      // if you need this
+                      side: BorderSide(
+                        color: Colors.grey.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: ListView(
+                      padding: const EdgeInsets.all(8),
+                      children: <Widget>[
+                        ListTile(
+                            title: Text("Battery Full"),
+                          trailing: IconButton(
+                            icon: new Icon(
+                              Icons.delete,
+                              color: Color(0xff486579),
+                              size: 35.0,
+                            ),
+                            onPressed: () {
+                              /* Your code */
+                            },
+                          )),
+                        ListTile(
+                            title: Text("Anchor"),
+                          trailing: IconButton(
+                            icon: new Icon(
+                              Icons.delete,
+                              color: Color(0xff486579),
+                              size: 35.0,
+                            ),
+                            onPressed: () {
+                              /* Your code */
+                            },
+                          )),
+                        ListTile(
+                            title: Text("Alarm"), trailing: IconButton(
+                          icon: new Icon(
+                            Icons.delete,
+                            color: Color(0xff486579),
+                            size: 35.0,
+                          ),
+                          onPressed: () {
+                            /* Your code */
+                          },
+                        )),
+                        ListTile(
+                            title: Text("Ballot"), trailing: IconButton(
+                          icon: new Icon(
+                            Icons.delete,
+                            color: Color(0xff486579),
+                            size: 35.0,
+                          ),
+                          onPressed: () {
+                            /* Your code */
+                          },
+                        ))
+                      ],
+                    ),
+                  )),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void addSymptomToSelections(Map<String, String> suggestion) {
+    print('suggestion' + suggestion.toString());
   }
 }

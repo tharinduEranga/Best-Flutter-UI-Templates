@@ -42,7 +42,7 @@ class CenterNextButton extends StatelessWidget {
 
     return Padding(
       padding:
-          EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
+          EdgeInsets.only(bottom: 10 + MediaQuery.of(context).padding.bottom),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +67,7 @@ class CenterNextButton extends StatelessWidget {
               animation: animationController,
               builder: (context, child) => Padding(
                 padding: EdgeInsets.only(
-                    bottom: 38 - (38 * _signUpMoveAnimation.value)),
+                    bottom: (_signUpMoveAnimation.value)),
                 child: Container(
                   height: 58,
                   width: 58 + (200 * _signUpMoveAnimation.value),
