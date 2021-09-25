@@ -117,13 +117,11 @@ class _RelaxViewState extends State<RelaxView> {
                             hintText: symptomsSearchPlaceHolder),
                       ),
                       suggestionsCallback: (pattern) async {
-                        return await BackendService.getSuggestions(pattern);
+                        return await SymptomsService.searchSymptoms(pattern);
                       },
                       itemBuilder: (context, Map<String, String> suggestion) {
                         return ListTile(
-                          title: Text(suggestion['name']!),
-                          subtitle: Text('${suggestion['score']}'),
-                        );
+                            title: Text(suggestion['name']!));
                       },
                       onSuggestionSelected: (Map<String, String> suggestion) {
                         // your implementation here
@@ -174,20 +172,21 @@ class _RelaxViewState extends State<RelaxView> {
 
   void addSymptomToSelections(Map<String, String> suggestion) {
     setState(() {
-      symptomsSearchPlaceHolder = suggestion.entries.first.value;
+      symptomsSearchPlaceHolder = suggestion.entries.elementAt(1).value;
       var newSymptomsList = addedSymptomsList.map((e) => e).toList();
 
       newSymptomsList.add(ListTile(
-          title: Text(suggestion.entries.first.value),
+          title: Text(suggestion.entries.elementAt(1).value),
           trailing: IconButton(
-            key: new Key(suggestion.entries.first.value),
+            key: new Key(suggestion.entries.elementAt(0).value),
             icon: new Icon(
               Icons.delete,
               color: Color(0xff486579),
               size: 35.0,
             ),
             onPressed: () {
-              removeSymptomFromSelections(suggestion.entries.first.value);
+              removeSymptomFromSelections(
+                  suggestion.entries.elementAt(0).value);
             },
           )));
       addedSymptomsList = newSymptomsList;
