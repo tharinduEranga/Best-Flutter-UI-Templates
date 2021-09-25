@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:best_flutter_ui_templates/app_config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -8,14 +9,14 @@ class BackendService {
       print('Query needs to be at least 3 chars');
       return Future.value([]);
     }
-    var url = Uri.https('api.datamuse.com', '/sug', {'s': query});
+    var url = Uri.https(AppConfig.API_URL, '/sug', {'s': query});
 
     var response = await http.get(url);
     List<Suggestion> suggestions = [];
     if (response.statusCode == 200) {
       Iterable json = convert.jsonDecode(response.body);
-      suggestions =
-      List<Suggestion>.from(json.map((model) => Suggestion.fromJson(model)));
+      suggestions = List<Suggestion>.from(
+          json.map((model) => Suggestion.fromJson(model)));
 
       print('Number of suggestion: ${suggestions.length}.');
     } else {

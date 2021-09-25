@@ -2,11 +2,16 @@ import 'dart:io';
 import 'package:best_flutter_ui_templates/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'app_config.dart';
 import 'introduction_animation/introduction_animation_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() async {
+void main({String? env}) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // load and set app config
+  await AppConfig.setEnvironment(env);
+
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
@@ -14,6 +19,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
