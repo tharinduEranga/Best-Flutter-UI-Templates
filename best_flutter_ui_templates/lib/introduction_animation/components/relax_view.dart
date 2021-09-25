@@ -15,6 +15,10 @@ class RelaxView extends StatefulWidget {
 }
 
 class _RelaxViewState extends State<RelaxView> {
+  var symptomsSearchPlaceHolder = 'What`s going on your body?';
+
+  List<Widget> addedSymptomsList = <Widget>[];
+
   @override
   Widget build(BuildContext context) {
     final _firstHalfAnimation =
@@ -110,7 +114,7 @@ class _RelaxViewState extends State<RelaxView> {
                             .copyWith(fontStyle: FontStyle.italic),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: 'What`s going on your body?'),
+                            hintText: symptomsSearchPlaceHolder),
                       ),
                       suggestionsCallback: (pattern) async {
                         return await BackendService.getSuggestions(pattern);
@@ -130,6 +134,18 @@ class _RelaxViewState extends State<RelaxView> {
                 ),
               ),
               SizedBox(height: 150), // give it height
+              Column(
+                children: [
+                  SlideTransition(
+                    position: _relaxAnimation,
+                    child: Text(
+                      "Selected symptoms",
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
               ConstrainedBox(
                   constraints: new BoxConstraints(
                     minHeight: 35.0,
@@ -146,54 +162,7 @@ class _RelaxViewState extends State<RelaxView> {
                     ),
                     child: ListView(
                       padding: const EdgeInsets.all(8),
-                      children: <Widget>[
-                        ListTile(
-                            title: Text("Battery Full"),
-                          trailing: IconButton(
-                            icon: new Icon(
-                              Icons.delete,
-                              color: Color(0xff486579),
-                              size: 35.0,
-                            ),
-                            onPressed: () {
-                              /* Your code */
-                            },
-                          )),
-                        ListTile(
-                            title: Text("Anchor"),
-                          trailing: IconButton(
-                            icon: new Icon(
-                              Icons.delete,
-                              color: Color(0xff486579),
-                              size: 35.0,
-                            ),
-                            onPressed: () {
-                              /* Your code */
-                            },
-                          )),
-                        ListTile(
-                            title: Text("Alarm"), trailing: IconButton(
-                          icon: new Icon(
-                            Icons.delete,
-                            color: Color(0xff486579),
-                            size: 35.0,
-                          ),
-                          onPressed: () {
-                            /* Your code */
-                          },
-                        )),
-                        ListTile(
-                            title: Text("Ballot"), trailing: IconButton(
-                          icon: new Icon(
-                            Icons.delete,
-                            color: Color(0xff486579),
-                            size: 35.0,
-                          ),
-                          onPressed: () {
-                            /* Your code */
-                          },
-                        ))
-                      ],
+                      children: addedSymptomsList,
                     ),
                   )),
             ],
@@ -204,6 +173,37 @@ class _RelaxViewState extends State<RelaxView> {
   }
 
   void addSymptomToSelections(Map<String, String> suggestion) {
-    print('suggestion' + suggestion.toString());
+    setState(() {
+      symptomsSearchPlaceHolder = suggestion.entries.first.value;
+      var newSymptomsList = addedSymptomsList.map((e) => e).toList();
+
+      newSymptomsList.add(ListTile(
+          title: Text(suggestion.entries.first.value),
+          trailing: IconButton(
+            key: new Key(suggestion.entries.first.value),
+            icon: new Icon(
+              Icons.delete,
+              color: Color(0xff486579),
+              size: 35.0,
+            ),
+            onPressed: () {
+              removeSymptomFromSelections(suggestion.entries.first.value);
+            },
+          )));
+      addedSymptomsList = newSymptomsList;
+    });
+  }
+
+  void removeSymptomFromSelections(String symptomId) {
+    setState(() {
+      var newSymptomsList = addedSymptomsList
+          .where((element) {
+            var listTitle = element as ListTile;
+            return listTitle.trailing!.key != new Key(symptomId);
+          })
+          .map((e) => e)
+          .toList();
+      addedSymptomsList = newSymptomsList;
+    });
   }
 }
