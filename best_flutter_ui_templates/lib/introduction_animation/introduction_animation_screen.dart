@@ -34,6 +34,17 @@ class _IntroductionAnimationScreenState
     super.dispose();
   }
 
+  List<SymptomDTO> addedSymptomsList = [];
+
+  callback(SymptomDTO newSymptom, int removeId) {
+    setState(() {
+      print('Setting state.... $newSymptom');
+      removeId > -1
+          ? addedSymptomsList.removeWhere((element) => element.id == removeId)
+          : addedSymptomsList.add(newSymptom);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print(_animationController?.value);
@@ -47,10 +58,10 @@ class _IntroductionAnimationScreenState
               animationController: _animationController!,
             ),
             RelaxView(
-              animationController: _animationController!,
-            ),
+                animationController: _animationController!, callback: callback),
             CareView(
               animationController: _animationController!,
+              selectedSymptoms: addedSymptomsList,
             ),
             MoodDiaryVew(
               animationController: _animationController!,
@@ -120,5 +131,18 @@ class _IntroductionAnimationScreenState
       builder: (BuildContext context) =>
           FitnessAppHomeScreen(),
     ));
+  }
+}
+
+class SymptomDTO {
+  final int id;
+  final String name;
+  final int position;
+
+  SymptomDTO(this.id, this.name, this.position);
+
+  @override
+  String toString() {
+    return 'SymptomDTO{id: $id, name: $name, position: $position}';
   }
 }

@@ -4,10 +4,14 @@ import 'package:best_flutter_ui_templates/service/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../introduction_animation_screen.dart';
+
 class RelaxView extends StatefulWidget {
   final AnimationController animationController;
+  final Function(SymptomDTO, int) callback;
 
-  const RelaxView({Key? key, required this.animationController})
+  const RelaxView(
+      {Key? key, required this.animationController, required this.callback})
       : super(key: key);
 
   @override
@@ -17,7 +21,7 @@ class RelaxView extends StatefulWidget {
 class _RelaxViewState extends State<RelaxView> {
   var symptomsSearchPlaceHolder = 'What`s going on your body?';
 
-  List<Widget> addedSymptomsList = <Widget>[];
+  List<Widget> addedSymptomsViewList = <Widget>[];
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +164,7 @@ class _RelaxViewState extends State<RelaxView> {
                     ),
                     child: ListView(
                       padding: const EdgeInsets.all(8),
-                      children: addedSymptomsList,
+                      children: addedSymptomsViewList,
                     ),
                   )),
             ],
@@ -172,37 +176,43 @@ class _RelaxViewState extends State<RelaxView> {
 
   void addSymptomToSelections(Map<String, String> suggestion) {
     setState(() {
-      symptomsSearchPlaceHolder = suggestion.entries.elementAt(1).value;
-      var newSymptomsList = addedSymptomsList.map((e) => e).toList();
+      var symptomDTO = new SymptomDTO(
+          int.parse(suggestion.entries.elementAt(0).value),
+          suggestion.entries.elementAt(1).value,
+          int.parse(suggestion.entries.elementAt(2).value));
+
+      symptomsSearchPlaceHolder = symptomDTO.name;
+      var newSymptomsList = addedSymptomsViewList.map((e) => e).toList();
 
       newSymptomsList.add(ListTile(
-          title: Text(suggestion.entries.elementAt(1).value),
+          title: Text(symptomDTO.name),
           trailing: IconButton(
-            key: new Key(suggestion.entries.elementAt(0).value),
+            key: new Key(symptomDTO.id.toString()),
             icon: new Icon(
               Icons.delete,
               color: Color(0xff486579),
               size: 35.0,
             ),
             onPressed: () {
-              removeSymptomFromSelections(
-                  suggestion.entries.elementAt(0).value);
+              removeSymptomFromSelections(symptomDTO);
             },
           )));
-      addedSymptomsList = newSymptomsList;
+      addedSymptomsViewList = newSymptomsList;
+      widget.callback(symptomDTO, -1);
     });
   }
 
-  void removeSymptomFromSelections(String symptomId) {
+  void removeSymptomFromSelections(SymptomDTO symptomDTO) {
     setState(() {
-      var newSymptomsList = addedSymptomsList
+      var newSymptomsList = addedSymptomsViewList
           .where((element) {
             var listTitle = element as ListTile;
-            return listTitle.trailing!.key != new Key(symptomId);
+            return listTitle.trailing!.key != new Key(symptomDTO.id.toString());
           })
           .map((e) => e)
           .toList();
-      addedSymptomsList = newSymptomsList;
+      addedSymptomsViewList = newSymptomsList;
+      widget.callback(symptomDTO, symptomDTO.id);
     });
   }
 }

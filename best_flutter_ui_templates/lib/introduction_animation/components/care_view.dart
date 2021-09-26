@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../introduction_animation_screen.dart';
+
 class CareView extends StatelessWidget {
+  final List<SymptomDTO> selectedSymptoms;
+
   final AnimationController animationController;
 
-  const CareView({Key? key, required this.animationController})
+  const CareView(
+      {Key? key,
+      required this.animationController,
+      required this.selectedSymptoms})
       : super(key: key);
 
   @override
@@ -19,8 +26,8 @@ class CareView extends StatelessWidget {
       ),
     ));
     final _secondHalfAnimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0))
+        .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.4,
@@ -29,8 +36,8 @@ class CareView extends StatelessWidget {
       ),
     ));
     final _relaxFirstHalfAnimation =
-        Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
+        .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.2,
@@ -39,8 +46,8 @@ class CareView extends StatelessWidget {
       ),
     ));
     final _relaxSecondHalfAnimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-2, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(0, 0), end: Offset(-2, 0))
+        .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.4,
@@ -50,8 +57,8 @@ class CareView extends StatelessWidget {
     ));
 
     final _imageFirstHalfAnimation =
-        Tween<Offset>(begin: Offset(4, 0), end: Offset(0, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(4, 0), end: Offset(0, 0))
+        .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.2,
@@ -60,8 +67,8 @@ class CareView extends StatelessWidget {
       ),
     ));
     final _imageSecondHalfAnimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-4, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(0, 0), end: Offset(-4, 0))
+        .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.4,
@@ -97,7 +104,7 @@ class CareView extends StatelessWidget {
                 child: SlideTransition(
                   position: _relaxSecondHalfAnimation,
                   child: Text(
-                    "Care",
+                    "Similar symptoms",
                     style:
                         TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                   ),
@@ -105,9 +112,9 @@ class CareView extends StatelessWidget {
               ),
               Padding(
                 padding:
-                    EdgeInsets.only(left: 64, right: 64, bottom: 16, top: 16),
+                EdgeInsets.only(left: 64, right: 64, bottom: 16, top: 16),
                 child: Text(
-                  "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore",
+                  selectedSymptoms.toString(),
                   textAlign: TextAlign.center,
                 ),
               ),
