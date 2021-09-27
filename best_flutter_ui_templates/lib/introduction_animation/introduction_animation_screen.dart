@@ -6,6 +6,7 @@ import 'package:best_flutter_ui_templates/introduction_animation/components/rela
 import 'package:best_flutter_ui_templates/introduction_animation/components/splash_view.dart';
 import 'package:best_flutter_ui_templates/introduction_animation/components/top_back_skip_view.dart';
 import 'package:best_flutter_ui_templates/introduction_animation/components/welcome_view.dart';
+import 'package:best_flutter_ui_templates/service/data.dart';
 import 'package:flutter/material.dart';
 
 class IntroductionAnimationScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _IntroductionAnimationScreenState
   }
 
   List<SymptomDTO> addedSymptomsList = [];
+  List<SymptomDTO> similarSymptomsList = [];
 
   callback(SymptomDTO newSymptom, int removeId) {
     setState(() {
@@ -60,9 +62,9 @@ class _IntroductionAnimationScreenState
             RelaxView(
                 animationController: _animationController!, callback: callback),
             CareView(
-              animationController: _animationController!,
-              selectedSymptoms: addedSymptomsList,
-            ),
+                animationController: _animationController!,
+                selectedSymptoms: addedSymptomsList,
+                similarSymptoms: similarSymptomsList),
             MoodDiaryVew(
               animationController: _animationController!,
             ),
@@ -109,9 +111,16 @@ class _IntroductionAnimationScreenState
     }
   }
 
-  void _onNextClick() {
+  Future<void> _onNextClick() async {
     if (_animationController!.value >= 0 &&
         _animationController!.value <= 0.2) {
+      // going to similar symptoms UI
+
+      var similarSymptoms =
+          await SymptomsService.getSimilarSymptoms(addedSymptomsList);
+      setState(() {
+        similarSymptomsList = similarSymptoms;
+      });
       _animationController?.animateTo(0.4);
     } else if (_animationController!.value > 0.2 &&
         _animationController!.value <= 0.4) {
