@@ -37,13 +37,19 @@ class _IntroductionAnimationScreenState
 
   List<SymptomDTO> addedSymptomsList = [];
   List<SymptomDTO> similarSymptomsList = [];
+  List<ListTile> addedSymptomsViewList = <ListTile>[];
 
-  callback(SymptomDTO newSymptom, int removeId) {
+  callback(SymptomDTO newSymptom, ListTile listTile, int removeId) {
     setState(() {
-      print('Setting state.... $newSymptom');
-      removeId > -1
-          ? addedSymptomsList.removeWhere((element) => element.id == removeId)
-          : addedSymptomsList.add(newSymptom);
+      print('Setting state.... $newSymptom,\t $listTile');
+      if (removeId > -1) {
+        addedSymptomsList.removeWhere((element) => element.id == removeId);
+        addedSymptomsViewList.removeWhere(
+            (element) => element.trailing!.key == new Key(removeId.toString()));
+      } else {
+        addedSymptomsList.add(newSymptom);
+        addedSymptomsViewList.add(listTile);
+      }
     });
   }
 
@@ -64,7 +70,8 @@ class _IntroductionAnimationScreenState
             CareView(
                 animationController: _animationController!,
                 selectedSymptoms: addedSymptomsList,
-                similarSymptoms: similarSymptomsList),
+                similarSymptoms: similarSymptomsList,
+                addedSymptomsViewList: addedSymptomsViewList),
             MoodDiaryVew(
               animationController: _animationController!,
             ),
@@ -120,6 +127,7 @@ class _IntroductionAnimationScreenState
           await SymptomsService.getSimilarSymptoms(addedSymptomsList);
       setState(() {
         similarSymptomsList = similarSymptoms;
+        addedSymptomsViewList = addedSymptomsViewList.toList();
       });
       _animationController?.animateTo(0.4);
     } else if (_animationController!.value > 0.2 &&

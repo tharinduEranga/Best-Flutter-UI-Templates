@@ -8,6 +8,7 @@ import '../introduction_animation_screen.dart';
 class CareView extends StatefulWidget {
   final List<SymptomDTO> selectedSymptoms;
   final List<SymptomDTO> similarSymptoms;
+  final List<ListTile> addedSymptomsViewList;
 
   final AnimationController animationController;
 
@@ -15,7 +16,8 @@ class CareView extends StatefulWidget {
       {Key? key,
       required this.animationController,
       required this.selectedSymptoms,
-      required this.similarSymptoms})
+      required this.similarSymptoms,
+      required this.addedSymptomsViewList})
       : super(key: key);
 
   @override
@@ -171,7 +173,7 @@ class _CareViewState extends State<CareView> {
                     ),
                     child: ListView(
                       padding: const EdgeInsets.all(8),
-                      children: [],
+                      children: widget.addedSymptomsViewList,
                     ),
                   )),
             ],

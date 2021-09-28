@@ -8,7 +8,7 @@ import '../introduction_animation_screen.dart';
 
 class RelaxView extends StatefulWidget {
   final AnimationController animationController;
-  final Function(SymptomDTO, int) callback;
+  final Function(SymptomDTO, ListTile, int) callback;
 
   const RelaxView(
       {Key? key, required this.animationController, required this.callback})
@@ -21,7 +21,7 @@ class RelaxView extends StatefulWidget {
 class _RelaxViewState extends State<RelaxView> {
   var symptomsSearchPlaceHolder = 'What`s going on your body?';
 
-  List<Widget> addedSymptomsViewList = <Widget>[];
+  List<ListTile> addedSymptomsViewList = <ListTile>[];
 
   @override
   Widget build(BuildContext context) {
@@ -183,8 +183,7 @@ class _RelaxViewState extends State<RelaxView> {
 
       symptomsSearchPlaceHolder = symptomDTO.name;
       var newSymptomsList = addedSymptomsViewList.map((e) => e).toList();
-
-      newSymptomsList.add(ListTile(
+      var newSymptomWidget = ListTile(
           title: Text(symptomDTO.name),
           trailing: IconButton(
             key: new Key(symptomDTO.id.toString()),
@@ -196,23 +195,25 @@ class _RelaxViewState extends State<RelaxView> {
             onPressed: () {
               removeSymptomFromSelections(symptomDTO);
             },
-          )));
+          ));
+      newSymptomsList.add(newSymptomWidget);
       addedSymptomsViewList = newSymptomsList;
-      widget.callback(symptomDTO, -1);
+      widget.callback(symptomDTO, newSymptomWidget, -1);
     });
   }
 
   void removeSymptomFromSelections(SymptomDTO symptomDTO) {
     setState(() {
+      ListTile removingWidget = new ListTile();
       var newSymptomsList = addedSymptomsViewList
           .where((element) {
-            var listTitle = element as ListTile;
-            return listTitle.trailing!.key != new Key(symptomDTO.id.toString());
+            removingWidget = element;
+            return element.trailing!.key != new Key(symptomDTO.id.toString());
           })
           .map((e) => e)
           .toList();
       addedSymptomsViewList = newSymptomsList;
-      widget.callback(symptomDTO, symptomDTO.id);
+      widget.callback(symptomDTO, removingWidget, symptomDTO.id);
     });
   }
 }
