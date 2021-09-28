@@ -10,6 +10,8 @@ class CareView extends StatefulWidget {
   final List<SymptomDTO> similarSymptoms;
   final List<ListTile> addedSymptomsViewList;
 
+  final Function(SymptomDTO, ListTile, int) callback;
+
   final AnimationController animationController;
 
   const CareView(
@@ -17,7 +19,8 @@ class CareView extends StatefulWidget {
       required this.animationController,
       required this.selectedSymptoms,
       required this.similarSymptoms,
-      required this.addedSymptomsViewList})
+      required this.addedSymptomsViewList,
+      required this.callback})
       : super(key: key);
 
   @override
@@ -135,8 +138,9 @@ class _CareViewState extends State<CareView> {
                         items: widget.similarSymptoms
                             .map((e) => MultiSelectItem(e.id, e.name))
                             .toList(),
-                        onTap: (values) {
-                          print(values);
+                        onTap: (symptomId) {
+                          addSymptomToSelections(
+                              int.parse(symptomId.toString()));
                         },
                         height: 150,
                         scroll: true,
@@ -181,5 +185,48 @@ class _CareViewState extends State<CareView> {
         ),
       ),
     );
+  }
+
+  void addSymptomToSelections(int symptomId) {
+    var symptomDTO = getSymptomDto(symptomId);
+    setState(() {
+      var newSymptomsList = widget.addedSymptomsViewList.map((e) => e).toList();
+      var newSymptomWidget = ListTile(
+          title: Text(symptomDTO.name),
+          trailing: IconButton(
+            key: new Key(symptomDTO.id.toString()),
+            icon: new Icon(
+              Icons.delete,
+              color: Color(0xff486579),
+              size: 35.0,
+            ),
+            onPressed: () {
+              removeSymptomFromSelections(symptomDTO);
+            },
+          ));
+      newSymptomsList.add(newSymptomWidget);
+
+      widget.callback(symptomDTO, newSymptomWidget, -1);
+    });
+  }
+
+  void removeSymptomFromSelections(SymptomDTO symptomDTO) {
+    setState(() {
+      ListTile removingWidget = new ListTile();
+      var newSymptomsList = widget.addedSymptomsViewList
+          .where((element) {
+            removingWidget = element;
+            return element.trailing!.key != new Key(symptomDTO.id.toString());
+          })
+          .map((e) => e)
+          .toList();
+
+      widget.callback(symptomDTO, removingWidget, symptomDTO.id);
+    });
+  }
+
+  SymptomDTO getSymptomDto(int symptomId) {
+    return widget.similarSymptoms
+        .firstWhere((element) => element.id == symptomId);
   }
 }

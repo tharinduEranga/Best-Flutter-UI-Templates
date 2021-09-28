@@ -68,10 +68,12 @@ class _IntroductionAnimationScreenState
             RelaxView(
                 animationController: _animationController!, callback: callback),
             CareView(
-                animationController: _animationController!,
-                selectedSymptoms: addedSymptomsList,
-                similarSymptoms: similarSymptomsList,
-                addedSymptomsViewList: addedSymptomsViewList),
+              animationController: _animationController!,
+              selectedSymptoms: addedSymptomsList,
+              similarSymptoms: similarSymptomsList,
+              addedSymptomsViewList: addedSymptomsViewList,
+              callback: callback,
+            ),
             MoodDiaryVew(
               animationController: _animationController!,
             ),
