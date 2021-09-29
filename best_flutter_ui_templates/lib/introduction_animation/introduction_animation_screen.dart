@@ -66,7 +66,9 @@ class _IntroductionAnimationScreenState
               animationController: _animationController!,
             ),
             RelaxView(
-                animationController: _animationController!, callback: callback),
+                animationController: _animationController!,
+                addedSymptomsViewList: addedSymptomsViewList,
+                callback: callback),
             CareView(
               animationController: _animationController!,
               selectedSymptoms: addedSymptomsList,

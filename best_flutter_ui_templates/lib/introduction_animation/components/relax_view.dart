@@ -7,12 +7,17 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../introduction_animation_screen.dart';
 
 class RelaxView extends StatefulWidget {
+  final List<ListTile> addedSymptomsViewList;
+
   final AnimationController animationController;
   final Function(SymptomDTO, ListTile, int) callback;
 
-  const RelaxView(
-      {Key? key, required this.animationController, required this.callback})
-      : super(key: key);
+  const RelaxView({
+    Key? key,
+    required this.animationController,
+    required this.addedSymptomsViewList,
+    required this.callback,
+  }) : super(key: key);
 
   @override
   _RelaxViewState createState() => _RelaxViewState();
@@ -21,10 +26,12 @@ class RelaxView extends StatefulWidget {
 class _RelaxViewState extends State<RelaxView> {
   var symptomsSearchPlaceHolder = 'What`s going on your body?';
 
-  List<ListTile> addedSymptomsViewList = <ListTile>[];
+  List<ListTile> addedSymptomsViewList = [];
 
   @override
   Widget build(BuildContext context) {
+    addedSymptomsViewList = widget.addedSymptomsViewList.toList();
+
     final _firstHalfAnimation =
         Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0)).animate(
       CurvedAnimation(
@@ -38,7 +45,7 @@ class _RelaxViewState extends State<RelaxView> {
     );
 
     final _secondHalfAnimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0)).animate(
+    Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0)).animate(
       CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(
@@ -49,7 +56,7 @@ class _RelaxViewState extends State<RelaxView> {
       ),
     );
     final _textAnimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-2, 0)).animate(
+    Tween<Offset>(begin: Offset(0, 0), end: Offset(-2, 0)).animate(
       CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(
@@ -60,7 +67,7 @@ class _RelaxViewState extends State<RelaxView> {
       ),
     );
     final _imageAnimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-4, 0)).animate(
+    Tween<Offset>(begin: Offset(0, 0), end: Offset(-4, 0)).animate(
       CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(
@@ -72,7 +79,7 @@ class _RelaxViewState extends State<RelaxView> {
     );
 
     final _relaxAnimation =
-        Tween<Offset>(begin: Offset(0, -2), end: Offset(0, 0)).animate(
+    Tween<Offset>(begin: Offset(0, -2), end: Offset(0, 0)).animate(
       CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(

@@ -28,9 +28,12 @@ class CareView extends StatefulWidget {
 }
 
 class _CareViewState extends State<CareView> {
+  List<ListTile> addedSymptomsViewList = [];
 
   @override
   Widget build(BuildContext context) {
+    addedSymptomsViewList = widget.addedSymptomsViewList.toList();
+
     final _firstHalfAnimation =
         Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0))
             .animate(CurvedAnimation(
@@ -42,8 +45,8 @@ class _CareViewState extends State<CareView> {
       ),
     ));
     final _secondHalfAnimation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0))
+        .animate(CurvedAnimation(
       parent: widget.animationController,
       curve: Interval(
         0.4,
@@ -53,7 +56,7 @@ class _CareViewState extends State<CareView> {
     ));
     final _relaxFirstHalfAnimation =
     Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-            .animate(CurvedAnimation(
+        .animate(CurvedAnimation(
       parent: widget.animationController,
       curve: Interval(
         0.2,
@@ -177,7 +180,7 @@ class _CareViewState extends State<CareView> {
                     ),
                     child: ListView(
                       padding: const EdgeInsets.all(8),
-                      children: widget.addedSymptomsViewList,
+                      children: addedSymptomsViewList,
                     ),
                   )),
             ],
@@ -190,7 +193,7 @@ class _CareViewState extends State<CareView> {
   void addSymptomToSelections(int symptomId) {
     var symptomDTO = getSymptomDto(symptomId);
     setState(() {
-      var newSymptomsList = widget.addedSymptomsViewList.map((e) => e).toList();
+      var newSymptomsList = addedSymptomsViewList.map((e) => e).toList();
       var newSymptomWidget = ListTile(
           title: Text(symptomDTO.name),
           trailing: IconButton(
@@ -205,7 +208,7 @@ class _CareViewState extends State<CareView> {
             },
           ));
       newSymptomsList.add(newSymptomWidget);
-
+      addedSymptomsViewList = newSymptomsList;
       widget.callback(symptomDTO, newSymptomWidget, -1);
     });
   }
@@ -213,14 +216,6 @@ class _CareViewState extends State<CareView> {
   void removeSymptomFromSelections(SymptomDTO symptomDTO) {
     setState(() {
       ListTile removingWidget = new ListTile();
-      var newSymptomsList = widget.addedSymptomsViewList
-          .where((element) {
-            removingWidget = element;
-            return element.trailing!.key != new Key(symptomDTO.id.toString());
-          })
-          .map((e) => e)
-          .toList();
-
       widget.callback(symptomDTO, removingWidget, symptomDTO.id);
     });
   }
