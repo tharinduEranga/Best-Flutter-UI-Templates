@@ -130,24 +130,24 @@ class _CareViewState extends State<CareView> {
                       height: 10.0,
                     ),
                     Container(
+                      height: 150,
                       padding: const EdgeInsets.all(3.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                               color: Colors.purple.shade50, width: 2)),
-                      child: MultiSelectChipDisplay(
-                        chipColor: Color.fromRGBO(130, 73, 186, 75),
-                        textStyle: TextStyle(color: Colors.white),
-                        items: widget.similarSymptoms
-                            .map((e) => MultiSelectItem(e.id, e.name))
-                            .toList(),
-                        onTap: (symptomId) {
-                          addSymptomToSelections(
-                              int.parse(symptomId.toString()));
-                        },
-                        height: 150,
-                        scroll: true,
-                        scrollBar: HorizontalScrollBar(isAlwaysShown: true),
+                      child: SingleChildScrollView(
+                        child: MultiSelectChipDisplay(
+                          chipColor: Color.fromRGBO(130, 73, 186, 75),
+                          textStyle: TextStyle(color: Colors.white),
+                          items: widget.similarSymptoms
+                              .map((e) => MultiSelectItem(e.id, e.name))
+                              .toList(),
+                          onTap: (symptomId) {
+                            addSymptomToSelections(
+                                int.parse(symptomId.toString()));
+                          },
+                        ),
                       ),
                     ),
                   ])),
