@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 class MoodDiaryVew extends StatefulWidget {
   final AnimationController animationController;
+  final String predictedDisease;
 
-  const MoodDiaryVew({Key? key, required this.animationController})
+  const MoodDiaryVew(
+      {Key? key,
+      required this.animationController,
+      required this.predictedDisease})
       : super(key: key);
 
   @override
@@ -104,37 +108,41 @@ class _MoodDiaryVewState extends State<MoodDiaryVew> {
                 ),
               ),
               SizedBox(height: 50),
-              Column(
-                children: [
-                  SlideTransition(
-                    position: _moodSecondHalfAnimation,
-                    child: Text(
-                      "Selected symptoms",
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.bold),
+              SlideTransition(
+                  position: _imageFirstHalfAnimation,
+                  child: Column(children: <Widget>[
+                    SizedBox(
+                      height: 10.0,
                     ),
-                  ),
-                ],
-              ),
-              ConstrainedBox(
-                  constraints: new BoxConstraints(
-                    minHeight: 35.0,
-                    maxHeight: 165.0,
-                  ),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      // if you need this
-                      side: BorderSide(
-                        color: Colors.grey.withOpacity(0.2),
-                        width: 1,
+                    Container(
+                      height: 150,
+                      padding: const EdgeInsets.all(3.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                              color: Colors.purple.shade50, width: 2)),
+                      child: DefaultTextStyle(
+                        style: TextStyle(fontSize: 36, color: Colors.blue),
+                        child: DefaultTextStyle(
+                          style: TextStyle(color: Colors.green),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  widget.predictedDisease != ''
+                                      ? widget.predictedDisease
+                                      : 'No disease',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 24),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    child: ListView(
-                      padding: const EdgeInsets.all(8),
-                      children: [],
-                    ),
-                  )),
+                  ])),
             ],
           ),
         ),

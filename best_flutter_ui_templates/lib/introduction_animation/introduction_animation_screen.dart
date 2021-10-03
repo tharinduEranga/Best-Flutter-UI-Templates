@@ -7,6 +7,7 @@ import 'package:best_flutter_ui_templates/introduction_animation/components/spla
 import 'package:best_flutter_ui_templates/introduction_animation/components/top_back_skip_view.dart';
 import 'package:best_flutter_ui_templates/introduction_animation/components/welcome_view.dart';
 import 'package:best_flutter_ui_templates/service/data.dart';
+import 'package:best_flutter_ui_templates/service/disease_service.dart';
 import 'package:flutter/material.dart';
 
 class IntroductionAnimationScreen extends StatefulWidget {
@@ -38,6 +39,7 @@ class _IntroductionAnimationScreenState
   List<SymptomDTO> addedSymptomsList = [];
   List<SymptomDTO> similarSymptomsList = [];
   List<ListTile> addedSymptomsViewList = <ListTile>[];
+  String predictedDisease = '';
 
   callback(SymptomDTO newSymptom, ListTile listTile, int removeId) {
     setState(() {
@@ -78,6 +80,7 @@ class _IntroductionAnimationScreenState
             ),
             MoodDiaryVew(
               animationController: _animationController!,
+              predictedDisease: predictedDisease,
             ),
             WelcomeView(
               animationController: _animationController!,
@@ -126,16 +129,23 @@ class _IntroductionAnimationScreenState
     if (_animationController!.value >= 0 &&
         _animationController!.value <= 0.2) {
       // going to similar symptoms UI
-
       var similarSymptoms =
           await SymptomsService.getSimilarSymptoms(addedSymptomsList);
       setState(() {
         similarSymptomsList = similarSymptoms;
         addedSymptomsViewList = addedSymptomsViewList.toList();
       });
+
       _animationController?.animateTo(0.4);
     } else if (_animationController!.value > 0.2 &&
         _animationController!.value <= 0.4) {
+      // going to disease predict UI
+      String disease =
+          await DiseaseService.getDiseasePredictions(addedSymptomsList);
+      setState(() {
+        this.predictedDisease = disease;
+      });
+
       _animationController?.animateTo(0.6);
     } else if (_animationController!.value > 0.4 &&
         _animationController!.value <= 0.6) {
