@@ -134,7 +134,9 @@ class _MoodDiaryVewState extends State<MoodDiaryVew> {
                                       ? widget.predictedDisease
                                       : 'No disease',
                                   style: TextStyle(
-                                      color: Colors.red, fontSize: 24),
+                                      color: Colors.red.shade300,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -143,6 +145,27 @@ class _MoodDiaryVewState extends State<MoodDiaryVew> {
                       ),
                     ),
                   ])),
+              SizedBox(height: 75),
+              SlideTransition(
+                  position: _imageSecondHalfAnimation,
+                  child: Text('Can`t trust our prediction?',
+                      style: TextStyle(fontSize: 14))),
+              SizedBox(height: 5),
+              SlideTransition(
+                position: _imageSecondHalfAnimation,
+                child: ElevatedButton(
+                  child: Text('Channel a general doctor',
+                      style: TextStyle(fontSize: 18)),
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromRGBO(230, 198, 230, 5),
+                      onPrimary: Colors.grey.shade800,
+                      onSurface: Colors.grey,
+                      fixedSize: Size(400, 50)),
+                  onPressed: () {
+                    print('Pressed');
+                  },
+                ),
+              )
             ],
           ),
         ),

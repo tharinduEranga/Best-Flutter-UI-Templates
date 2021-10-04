@@ -124,7 +124,16 @@ class _RelaxViewState extends State<RelaxView> {
                             .style
                             .copyWith(fontStyle: FontStyle.italic),
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromRGBO(166, 60, 166, 120),
+                                  width: 1.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromRGBO(166, 60, 166, 20),
+                                  width: 2.0),
+                            ),
                             hintText: symptomsSearchPlaceHolder),
                       ),
                       suggestionsCallback: (pattern) async {
@@ -165,8 +174,8 @@ class _RelaxViewState extends State<RelaxView> {
                       borderRadius: BorderRadius.circular(20),
                       // if you need this
                       side: BorderSide(
-                        color: Colors.grey.withOpacity(0.2),
-                        width: 1,
+                        color: Colors.white,
+                        width: 0.5,
                       ),
                     ),
                     child: ListView(

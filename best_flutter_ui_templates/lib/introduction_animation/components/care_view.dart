@@ -174,8 +174,8 @@ class _CareViewState extends State<CareView> {
                       borderRadius: BorderRadius.circular(20),
                       // if you need this
                       side: BorderSide(
-                        color: Colors.grey.withOpacity(0.2),
-                        width: 1,
+                        color: Colors.white,
+                        width: 0.5,
                       ),
                     ),
                     child: ListView(
