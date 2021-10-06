@@ -8,6 +8,7 @@ import 'package:best_flutter_ui_templates/introduction_animation/components/top_
 import 'package:best_flutter_ui_templates/introduction_animation/components/welcome_view.dart';
 import 'package:best_flutter_ui_templates/service/data.dart';
 import 'package:best_flutter_ui_templates/service/disease_service.dart';
+import 'package:best_flutter_ui_templates/service/doctor_service.dart';
 import 'package:flutter/material.dart';
 
 class IntroductionAnimationScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _IntroductionAnimationScreenState
   List<SymptomDTO> similarSymptomsList = [];
   List<ListTile> addedSymptomsViewList = <ListTile>[];
   DiseaseDTO predictedDisease = DiseaseDTO.getEmpty();
+  DoctorSuggestionResult doctorSuggestion = DoctorSuggestionResult.getEmpty();
 
   callback(SymptomDTO newSymptom, ListTile listTile, int removeId) {
     setState(() {
@@ -150,6 +152,11 @@ class _IntroductionAnimationScreenState
     } else if (_animationController!.value > 0.4 &&
         _animationController!.value <= 0.6) {
       //going to doctor suggestions UI
+      DoctorSuggestionResult doctorSuggestion =
+          await DoctorService.getDoctorSuggestions(predictedDisease.id);
+      setState(() {
+        this.doctorSuggestion = doctorSuggestion;
+      });
 
       _animationController?.animateTo(0.8);
     } else if (_animationController!.value > 0.6 &&
@@ -201,5 +208,59 @@ class DiseaseDTO {
 
   static bool isEmpty(DiseaseDTO diseaseDTO) {
     return diseaseDTO.id < 1 || diseaseDTO.name == '';
+  }
+}
+
+class DoctorDTO {
+  final int id;
+  final String name;
+  final String speciality;
+
+  DoctorDTO(this.id, this.name, this.speciality);
+
+  static DoctorDTO getFromJson(Map<String, dynamic> json) {
+    return new DoctorDTO(json['id'], json['name'], json['speciality']);
+  }
+
+  @override
+  String toString() {
+    return 'DoctorDTO{id: $id, name: $name, speciality: $speciality}';
+  }
+}
+
+class DoctorSuggestionResult {
+  final List<String> specialities;
+  final List<DoctorDTO> doctors;
+
+  DoctorSuggestionResult(this.specialities, this.doctors);
+
+  @override
+  String toString() {
+    return 'DoctorSuggestionResult{specialities: $specialities, '
+        'doctors: $doctors}';
+  }
+
+  static DoctorSuggestionResult getEmpty() {
+    return new DoctorSuggestionResult([], []);
+  }
+
+  static bool isEmpty(DoctorSuggestionResult doctorSuggestionResult) {
+    return doctorSuggestionResult.specialities.isEmpty &&
+        doctorSuggestionResult.doctors.isEmpty;
+  }
+
+  static DoctorSuggestionResult getFromJson(Map<String, dynamic> json) {
+    final List<String> specialities = [];
+    final List<DoctorDTO> doctors = [];
+
+    json['specialities'].forEach((v) {
+      specialities.add(v);
+    });
+
+    json['doctors'].forEach((v) {
+      doctors.add(DoctorDTO.getFromJson(v));
+    });
+
+    return new DoctorSuggestionResult(specialities, doctors);
   }
 }
