@@ -6,12 +6,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 class DiseaseService {
-  static Future<String> getDiseasePredictions(
+  static Future<DiseaseDTO> getDiseasePredictions(
       List<SymptomDTO> symptomDTOs) async {
+    DiseaseDTO predictedDisease = DiseaseDTO.getEmpty();
+
     try {
       if (symptomDTOs.isEmpty) {
-        return Future.value('');
+        return Future.value(predictedDisease);
       }
+
       var url = Uri.parse(AppConfig.API_URL + '/patient/disease/predict');
 
       var symptomIds = {"symptomIds": symptomDTOs.map((e) => e.id).toList()};
@@ -23,10 +26,10 @@ class DiseaseService {
           body: symptomIdsReqBody);
 
       print('Resp:  $response');
-      String predictedDisease = '';
 
       if (response.statusCode == 200) {
-        predictedDisease = convert.jsonDecode(response.body)["data"]["disease"];
+        var jsonDisease = convert.jsonDecode(response.body)["data"];
+        predictedDisease = DiseaseDTO.getFromJson(jsonDisease);
 
         print('Disease prediction: predictedDisease.');
       } else {
@@ -36,7 +39,7 @@ class DiseaseService {
       return Future.value(predictedDisease);
     } catch (e) {
       print('Error: $e');
-      return Future.value('');
+      return Future.value(predictedDisease);
     }
   }
 }

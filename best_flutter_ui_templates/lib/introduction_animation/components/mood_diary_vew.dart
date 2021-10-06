@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../introduction_animation_screen.dart';
+
 class MoodDiaryVew extends StatefulWidget {
   final AnimationController animationController;
-  final String predictedDisease;
+  final DiseaseDTO predictedDisease;
 
   const MoodDiaryVew(
       {Key? key,
@@ -130,8 +132,8 @@ class _MoodDiaryVewState extends State<MoodDiaryVew> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  widget.predictedDisease != ''
-                                      ? widget.predictedDisease
+                                  !DiseaseDTO.isEmpty(widget.predictedDisease)
+                                      ? widget.predictedDisease.name
                                       : 'No disease',
                                   style: TextStyle(
                                       color: Colors.red.shade300,

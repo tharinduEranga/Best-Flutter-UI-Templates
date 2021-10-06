@@ -39,7 +39,7 @@ class _IntroductionAnimationScreenState
   List<SymptomDTO> addedSymptomsList = [];
   List<SymptomDTO> similarSymptomsList = [];
   List<ListTile> addedSymptomsViewList = <ListTile>[];
-  String predictedDisease = '';
+  DiseaseDTO predictedDisease = DiseaseDTO.getEmpty();
 
   callback(SymptomDTO newSymptom, ListTile listTile, int removeId) {
     setState(() {
@@ -140,7 +140,7 @@ class _IntroductionAnimationScreenState
     } else if (_animationController!.value > 0.2 &&
         _animationController!.value <= 0.4) {
       // going to disease predict UI
-      String disease =
+      DiseaseDTO disease =
           await DiseaseService.getDiseasePredictions(addedSymptomsList);
       setState(() {
         this.predictedDisease = disease;
@@ -149,6 +149,8 @@ class _IntroductionAnimationScreenState
       _animationController?.animateTo(0.6);
     } else if (_animationController!.value > 0.4 &&
         _animationController!.value <= 0.6) {
+      //going to doctor suggestions UI
+
       _animationController?.animateTo(0.8);
     } else if (_animationController!.value > 0.6 &&
         _animationController!.value <= 0.8) {
@@ -175,5 +177,29 @@ class SymptomDTO {
   @override
   String toString() {
     return 'SymptomDTO{id: $id, name: $name, position: $position}';
+  }
+}
+
+class DiseaseDTO {
+  final int id;
+  final String name;
+
+  DiseaseDTO(this.id, this.name);
+
+  @override
+  String toString() {
+    return 'DiseaseDTO{id: $id, name: $name}';
+  }
+
+  static DiseaseDTO getFromJson(Map<String, dynamic> json) {
+    return new DiseaseDTO(json['id'], json['disease']);
+  }
+
+  static DiseaseDTO getEmpty() {
+    return new DiseaseDTO(0, '');
+  }
+
+  static bool isEmpty(DiseaseDTO diseaseDTO) {
+    return diseaseDTO.id < 1 || diseaseDTO.name == '';
   }
 }
