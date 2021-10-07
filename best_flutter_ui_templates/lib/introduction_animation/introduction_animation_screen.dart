@@ -86,6 +86,7 @@ class _IntroductionAnimationScreenState
             ),
             WelcomeView(
               animationController: _animationController!,
+              doctorSuggestion: doctorSuggestion,
             ),
             TopBackSkipView(
               onBackClick: _onBackClick,
